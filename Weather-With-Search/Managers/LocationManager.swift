@@ -35,25 +35,25 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate{
     func locationManager(_ manager: CLLocationManager, didFailWithError error: any Error) {
         print("Error getting location: \(error.localizedDescription)")
         if let clError = error as? CLError {
-                   print("CLError code: \(clError.code.rawValue)")
-               }
-               isLoading = false
+            print("CLError code: \(clError.code.rawValue)")
+        }
+        isLoading = false
     }
     
     func lookUpCurrentLocation(completionHandler: @escaping (CLPlacemark?) -> Void ) {
-            // Use the last reported location.
+        // Use the last reported location.
         if let lastLocation = self.location {
             let geocoder = CLGeocoder()
-                
+            
             // Look up the location and pass it to the completion handler
             geocoder.reverseGeocodeLocation(CLLocation(latitude: lastLocation.latitude, longitude: lastLocation.longitude),
-                        completionHandler: { (placemarks, error) in
+                                            completionHandler: { (placemarks, error) in
                 if error == nil {
                     let firstLocation = placemarks?[0]
                     completionHandler(firstLocation)
                 }
                 else {
-                 // An error occurred during geocoding.
+                    // An error occurred during geocoding.
                     completionHandler(nil)
                 }
             })
@@ -64,9 +64,32 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate{
         }
     }
     
-}
-
-struct LocationData {
-    let cityName: String
-    let location: CLLocationCoordinate2D
+    func forwardGeocoding(address: String) -> CLLocationCoordinate2D {
+        var result: CLLocationCoordinate2D?
+        let geocoder = CLGeocoder()
+        geocoder.geocodeAddressString(address, completionHandler: { (placemarks, error) in
+            if error != nil {
+                print("Failed to retrieve location")
+                return
+            }
+            
+            var location: CLLocation?
+            
+            if let placemarks = placemarks, placemarks.count > 0 {
+                location = placemarks.first?.location
+            }
+            
+            if let location = location {
+                let coordinate = location.coordinate
+                print("\nlat: \(coordinate.latitude), long: \(coordinate.longitude)")
+                result = CLLocationCoordinate2D(latitude: coordinate.latitude, longitude: coordinate.longitude)
+            }
+            else
+            {
+                print("No Matching Location Found")
+            }
+        })
+        return result ?? CLLocationCoordinate2D(latitude: 0, longitude: 0)
+    }
+    
 }
