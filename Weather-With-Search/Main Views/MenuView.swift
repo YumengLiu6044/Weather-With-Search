@@ -15,14 +15,14 @@ struct MenuView: View {
     @StateObject private var locationManager        =   LocationManager()
     @StateObject private var searchResultViewModel  =   SearchResultViewModel()
     @AppStorage("saved_city_csv_string") private var savedCityString: String = SampleData.sampleCitiesString
-    @State private var citySet: Set<LocationData> = []
+    @State private var cityArray: Array<LocationData> = []
     @State private var isLoadingWeatherView = false
     
     var body: some View {
         NavigationStack{
             VStack{
                 List {
-                    ForEach(Array(citySet), id:\.self) { city in
+                    ForEach(cityArray, id:\.self) { city in
                         CityRowView(locationManager: self.locationManager, city: city)
                             .frame(height:120)
                             .clipShape(.rect(cornerRadius: 6))
@@ -30,6 +30,10 @@ struct MenuView: View {
                         
                     }
                     .onDelete(perform: removeCity)
+                    .onMove {
+                        from, to in
+                        cityArray.move(fromOffsets: from, toOffset: to)
+                    }
                 }
                 .listRowSpacing(15)
                 
@@ -68,37 +72,43 @@ struct MenuView: View {
     }
     
     private func loadCity() {
-        citySet.removeAll()
+        cityArray.removeAll()
         for city in savedCityString.split(separator: "#") {
             let components = city.split(separator: "@")
             if components.count == 2{
-                citySet.insert(LocationData(cityTitle: String(components[0]), citySubtitle: String(components[1])))
+                cityArray.append(LocationData(cityTitle: String(components[0]), citySubtitle: String(components[1])))
+            }
+            
+            else if components.count == 1 {
+                cityArray.append(LocationData(cityTitle: String(components[0]), citySubtitle: ""))
             }
             
         }
     }
     
     private func addCity(_ newCity: MKLocalSearchCompletion) {
-        citySet.insert(LocationData(cityTitle: newCity.title, citySubtitle: newCity.subtitle))
+        let adding = LocationData(cityTitle: newCity.title, citySubtitle: newCity.subtitle)
+        if cityArray.contains(adding) {
+            return
+        }
+        cityArray.append(adding)
         saveCity()
     }
     
     private func removeCity(_ offsets: IndexSet) {
-        for index in offsets {
-            let city = Array(citySet)[index]
-            citySet.remove(city)
-        }
+        cityArray.remove(atOffsets: offsets)
         saveCity()
     }
     
     private func saveCity() {
         var save: String = ""
-        for i in citySet {
+        for i in cityArray {
             save += i.cityTitle + "@" + i.citySubtitle + "#"
         }
         if !save.isEmpty {
             save.removeLast()
         }
+        
         savedCityString = save
     }
     
