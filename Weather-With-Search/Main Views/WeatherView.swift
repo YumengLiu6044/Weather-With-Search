@@ -107,6 +107,7 @@ struct WeatherView: View {
     private func loadWeather() {
         maxTemperature = response.daily.temperature_2m_max.max() ?? 40
         minTemperature = response.daily.temperature_2m_min.min() ?? 11
+        minTemperature *= 0.9
         
         currentWeather = loadCurrentWeather(response)
         hourWeatherArray = loadHourWeather(response)
