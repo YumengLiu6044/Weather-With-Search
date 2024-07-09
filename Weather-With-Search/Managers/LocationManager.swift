@@ -64,6 +64,26 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate{
         }
     }
     
+    func getTimeZone(forLatitude latitude: Double, longitude: Double, completion: @escaping (String?) -> Void) {
+        let location = CLLocation(latitude: latitude, longitude: longitude)
+        let geocoder = CLGeocoder()
+        
+        geocoder.reverseGeocodeLocation(location) { (placemarks, error) in
+            if let error = error {
+                print("Error during reverse geocoding: \(error)")
+                completion(nil)
+                return
+            }
+            
+            guard let placemark = placemarks?.first, let timeZone = placemark.timeZone else {
+                print("No placemark or time zone found")
+                completion(nil)
+                return
+            }
+            
+            completion(timeZone.identifier)
+        }
+    }
     
     func getCoordinate( addressString : String,
                         completionHandler: @escaping(CLLocationCoordinate2D, NSError?) -> Void ) {
