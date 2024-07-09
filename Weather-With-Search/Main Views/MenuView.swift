@@ -33,6 +33,7 @@ struct MenuView: View {
                     .onMove {
                         from, to in
                         cityArray.move(fromOffsets: from, toOffset: to)
+                        saveCity()
                     }
                 }
                 .listRowSpacing(15)
