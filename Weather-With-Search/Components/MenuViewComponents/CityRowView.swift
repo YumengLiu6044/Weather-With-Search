@@ -10,7 +10,7 @@ import CoreLocation
 import Shimmer
 
 struct CityRowView: View {
-    var locationManager: LocationManager = LocationManager()
+    var locationManager: LocationManager
     var weatherManager: WeatherManager = WeatherManager()
     var city: LocationData
     @State private var isLoading: Bool = true
@@ -26,6 +26,8 @@ struct CityRowView: View {
             if !isLoading {
                 WeatherView(weatherManager: self.weatherManager, response: self.response!, cityName: self.city.cityTitle)
                     .navigationBarTitleDisplayMode(.inline)
+                    
+                    
                                             
             }
         } label: {
@@ -64,7 +66,6 @@ struct CityRowView: View {
             }
             
         }
-        .tint(.white)
     }
     
     private func loadLocation() {
@@ -73,8 +74,6 @@ struct CityRowView: View {
                 print("Error geocoding address: \(error.localizedDescription)")
             } else {
                 let location = CLLocationCoordinate2D(latitude: coordinate.latitude, longitude: coordinate.longitude)
-                print(location)
-                
                 Task {
                     await loadTimeZone(location: location)
                 }
@@ -119,6 +118,6 @@ struct CityRowView: View {
 }
 
 #Preview {
-    CityRowView(city: LocationData(cityTitle: "Beijing", citySubtitle: "China"))
+    CityRowView(locationManager: LocationManager(), city: LocationData(cityTitle: "Beijing", citySubtitle: "China"))
     
 }

@@ -19,7 +19,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate{
         super.init()
         manager.delegate = self
         manager.desiredAccuracy = kCLLocationAccuracyBest
-        manager.requestWhenInUseAuthorization()
+        checkAuthorization()
     }
     
     func requestLocation() {
@@ -28,7 +28,13 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate{
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        location = locations.first?.coordinate
+        if let location = locations.first?.coordinate {
+            self.location = location
+            print("Location found: \(location.latitude), \(location.longitude)")
+        } else {
+            print("No locations found")
+        }
+        
         isLoading = false
     }
     
@@ -38,6 +44,28 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate{
             print("CLError code: \(clError.code.rawValue)")
         }
         isLoading = false
+    }
+    
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        checkAuthorization()
+    }
+    
+    func checkAuthorization() {
+        switch manager.authorizationStatus {
+        case .authorizedAlways:
+            print("Authorized always")
+        case .restricted:
+            print("Restricted")
+        case .authorizedWhenInUse:
+            print("Authorized when in use")
+        case .denied:
+            print("Authorization denied. Go to settings and allow location access")
+        case .notDetermined:
+            manager.requestAlwaysAuthorization()
+            print("Requesting always authorization")
+        default:
+            print("Defaulted")
+        }
     }
     
     func lookUpCurrentLocation(completionHandler: @escaping (CLPlacemark?) -> Void ) {

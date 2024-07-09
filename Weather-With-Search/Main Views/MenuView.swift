@@ -11,9 +11,9 @@ import MapKit
 
 
 struct MenuView: View {
-    @ObservedObject var locationService = LocationService()
-    @StateObject private var locationManager = LocationManager()
-    @StateObject private var searchResultViewModel = SearchResultViewModel()
+    @StateObject private var locationService        =   LocationService()
+    @StateObject private var locationManager        =   LocationManager()
+    @StateObject private var searchResultViewModel  =   SearchResultViewModel()
     @AppStorage("saved_city_csv_string") private var savedCityString: String = SampleData.sampleCitiesString
     @State private var citySet: Set<LocationData> = []
     @State private var isLoadingWeatherView = false
@@ -23,7 +23,7 @@ struct MenuView: View {
             VStack{
                 List {
                     ForEach(Array(citySet), id:\.self) { city in
-                        CityRowView(city: city)
+                        CityRowView(locationManager: self.locationManager, city: city)
                             .frame(height:120)
                             .clipShape(.rect(cornerRadius: 6))
                         
@@ -40,7 +40,11 @@ struct MenuView: View {
                 HStack{
                     Image(systemName: "location")
                     Text("Use Current Location")
+                        .onTapGesture {
+                            loadCurrentLocation()
+                        }
                 }
+                
                 
                 ForEach(searchResultViewModel.listCities(completions: locationService.searchResults), id:\.self) {
                     result in
@@ -57,12 +61,14 @@ struct MenuView: View {
         .tint(.primary)
         .onAppear {
             loadCity()
+            locationManager.requestLocation()
         }
         
         
     }
     
     private func loadCity() {
+        citySet.removeAll()
         for city in savedCityString.split(separator: "#") {
             let components = city.split(separator: "@")
             if components.count == 2{
@@ -97,12 +103,22 @@ struct MenuView: View {
     }
     
     private func loadCurrentLocation() {
-        locationManager.requestLocation()
+        
+        if locationManager.isLoading {
+            print("Still loading")
+            return
+        } else {
+            print("Loaded")
+        }
+        guard locationManager.location != nil else {
+            print("Failed to load current location")
+            return
+        }
         locationManager.lookUpCurrentLocation {
             placemark in
             if let placemark = placemark {
                 // Access placemark information like locality (city), administrativeArea (state), etc.
-                if let locality = placemark.locality, let administrativeArea = placemark.administrativeArea {
+                if let locality = placemark.locality {
                     locationService.queryFragment = "\(locality)"
                 }
             }
