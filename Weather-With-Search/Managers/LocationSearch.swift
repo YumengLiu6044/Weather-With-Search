@@ -79,4 +79,5 @@ extension LocationService: MKLocalSearchCompleterDelegate {
     func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
         self.status = .error(error.localizedDescription)
     }
+    
 }

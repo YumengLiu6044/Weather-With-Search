@@ -27,7 +27,7 @@ struct MenuView: View {
                             .frame(height:120)
                             .clipShape(.rect(cornerRadius: 6))
                         
-                            
+                        
                     }
                     .onDelete(perform: removeCity)
                 }
@@ -45,16 +45,16 @@ struct MenuView: View {
                 ForEach(searchResultViewModel.listCities(completions: locationService.searchResults), id:\.self) {
                     result in
                     SearchRecommendationView(result: result)
-                    .onTapGesture {
-                        addCity(result)
-                        locationService.queryFragment = ""
-                        searchResultViewModel.isSearch = false
-                    }
+                        .onTapGesture {
+                            addCity(result)
+                            locationService.queryFragment = ""
+                            searchResultViewModel.isSearch = false
+                        }
                     
                 }
             }
         }
-        
+        .tint(.primary)
         .onAppear {
             loadCity()
         }
@@ -94,6 +94,19 @@ struct MenuView: View {
             save.removeLast()
         }
         savedCityString = save
+    }
+    
+    private func loadCurrentLocation() {
+        locationManager.requestLocation()
+        locationManager.lookUpCurrentLocation {
+            placemark in
+            if let placemark = placemark {
+                // Access placemark information like locality (city), administrativeArea (state), etc.
+                if let locality = placemark.locality, let administrativeArea = placemark.administrativeArea {
+                    locationService.queryFragment = "\(locality)"
+                }
+            }
+        }
     }
 }
 
