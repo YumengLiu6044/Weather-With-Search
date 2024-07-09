@@ -23,7 +23,7 @@ struct MenuView: View {
             VStack{
                 List {
                     ForEach(Array(citySet), id:\.self) { city in
-                        CityRowView(locationManager: locationManager, city: city)
+                        CityRowView(city: city)
                             .frame(height:120)
                             .clipShape(.rect(cornerRadius: 6))
                         
