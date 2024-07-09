@@ -38,6 +38,7 @@ struct WeatherView: View {
                     Text(cityName)
                         .font(.system(size: 50))
                         .fontWeight(.semibold)
+                        .scaledToFit()
                         .minimumScaleFactor(0.3)
                         .foregroundStyle(Color(.white))
                         .shadow(radius: 10)
@@ -68,7 +69,7 @@ struct WeatherView: View {
                     
                     
                     ScrollView(.vertical) {
-                        VStack(spacing: 25) {
+                        VStack(spacing: 10) {
                             ForEach(dayWeatherArray) {
                                 day in
                                 DayWeatherRowView(dayWeatherItem: day, maxTemperature: maxTemperature, minTemperature: minTemperature)
@@ -88,7 +89,7 @@ struct WeatherView: View {
                     .clipShape(.rect(cornerRadius: 10))
                     
                 }
-                .padding(10.0)
+                .padding(20.0)
                 .transition(.backslide)
             }
             

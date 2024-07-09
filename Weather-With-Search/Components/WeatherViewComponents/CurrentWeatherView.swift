@@ -48,6 +48,8 @@ struct CurrentWeatherView: View {
                         .onReceive(timer) { _ in
                             updateTime()
                         }
+                        .scaledToFit()
+                        .minimumScaleFactor(0.5)
                         .transition(.blurReplace())
                         .animation(.easeIn, value: currentTime)
                     
