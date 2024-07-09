@@ -30,7 +30,6 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate{
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.first?.coordinate {
             self.location = location
-            print("Location found: \(location.latitude), \(location.longitude)")
         } else {
             print("No locations found")
         }
@@ -52,12 +51,10 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate{
     
     func checkAuthorization() {
         switch manager.authorizationStatus {
-        case .authorizedAlways:
-            print("Authorized always")
         case .restricted:
             print("Restricted")
-        case .authorizedWhenInUse:
-            print("Authorized when in use")
+        case .authorizedWhenInUse, .authorizedAlways:
+            break
         case .denied:
             print("Authorization denied. Go to settings and allow location access")
         case .notDetermined:

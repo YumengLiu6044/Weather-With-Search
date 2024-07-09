@@ -27,8 +27,6 @@ class LocationService: NSObject, ObservableObject {
         
         queryCancellable = $queryFragment
             .receive(on: DispatchQueue.main)
-        // we're debouncing the search, because the search completer is rate limited.
-        // feel free to play with the proper value here
             .debounce(for: .milliseconds(250), scheduler: RunLoop.main, options: nil)
             .sink(receiveValue: { fragment in
                 self.status = .isSearching
@@ -44,35 +42,8 @@ class LocationService: NSObject, ObservableObject {
 
 extension LocationService: MKLocalSearchCompleterDelegate {
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-        // Depending on what you're searching, you might need to filter differently or
-        // remove the filter altogether. Filtering for an empty Subtitle seems to filter
-        // out a lot of places and only shows cities and countries.
         self.searchResults = completer.results
         
-//        self.searchResults = completer.results.filter { result in
-//
-//        if !result.title.contains(",") {
-//
-//            return false
-//
-//        }
-//
-//        if result.title.rangeOfCharacter(from: CharacterSet.decimalDigits) != nil {
-//
-//            return false
-//
-//        }
-//
-//        if result.subtitle.rangeOfCharacter(from: CharacterSet.decimalDigits) != nil {
-//
-//            return false
-//
-//        }
-//
-//        return true
-//
-//    }
-//
         self.status = completer.results.isEmpty ? .noResults : .result
     }
     

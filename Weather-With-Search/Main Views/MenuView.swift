@@ -115,12 +115,6 @@ struct MenuView: View {
     
     private func loadCurrentLocation() {
         
-        if locationManager.isLoading {
-            print("Still loading")
-            return
-        } else {
-            print("Loaded")
-        }
         guard locationManager.location != nil else {
             print("Failed to load current location")
             return
