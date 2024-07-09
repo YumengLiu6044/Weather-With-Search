@@ -31,7 +31,7 @@ struct MenuView: View {
                     }
                     .onDelete(perform: removeCity)
                 }
-                .listRowSpacing(20)
+                .listRowSpacing(15)
                 
             }
             .navigationTitle("Weather")

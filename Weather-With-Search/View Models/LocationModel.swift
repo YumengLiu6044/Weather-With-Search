@@ -7,9 +7,8 @@
 
 import Foundation
 
-struct LocationData: Identifiable, Hashable {
+struct LocationData: Hashable {
     
-    let id : UUID = UUID()
     let cityTitle: String
     let citySubtitle: String
     

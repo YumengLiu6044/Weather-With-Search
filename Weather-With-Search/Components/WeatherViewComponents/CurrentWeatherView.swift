@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct CurrentWeatherView: View {
-    var currentWeather = SampleData.sampleCurrentWeather
+    var currentWeather: CurrentWeather
     
     @State private var isLoading    = true
-    @State private var currentTime  = "23:59"
+    @State private var currentTime  = "23:59:59"
     @State private var timer        = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     var body: some View {
@@ -64,5 +64,5 @@ struct CurrentWeatherView: View {
 
 
 #Preview {
-    CurrentWeatherView()
+    CurrentWeatherView(currentWeather: SampleData.sampleCurrentWeather)
 }

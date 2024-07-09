@@ -24,7 +24,7 @@ struct CityRowView: View {
     var body: some View {
         NavigationLink{
             if !isLoading {
-                WeatherView(response: response!, cityName: city.cityTitle)
+                WeatherView(weatherManager: self.weatherManager, response: self.response!, cityName: self.city.cityTitle)
             }
         } label: {
             HStack {
@@ -55,7 +55,7 @@ struct CityRowView: View {
             .padding()
             .fontWeight(.semibold)
             .onAppear {
-                self.currentTime = getFormattedTime(from: Date(), with: "HH:mm:ss", for: timeZone)
+                self.currentTime = getFormattedTime(from: Date(), with: "HH:mm", for: timeZone)
             }
             .task{
                 loadLocation()
@@ -74,7 +74,6 @@ struct CityRowView: View {
                 
                 Task {
                     await loadTimeZone(location: location)
-                    await loadWeather(location: location)
                 }
             }
         }
@@ -85,6 +84,9 @@ struct CityRowView: View {
         locationManager.getTimeZone(forLatitude: location.latitude, longitude: location.longitude) { timeZoneIdentifier in
             if let timeZoneIdentifier = timeZoneIdentifier {
                 self.timeZone = timeZoneIdentifier
+                Task {
+                    await loadWeather(location: location)
+                }
             } else {
                 print("Failed to load time zone")
             }
