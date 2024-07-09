@@ -48,6 +48,7 @@ struct MenuView: View {
                         Text(result.subtitle)
                             .font(.caption)
                     }
+                    .frame(width: .infinity)
                     .onTapGesture {
                         addCity(result)
                         locationService.queryFragment = ""

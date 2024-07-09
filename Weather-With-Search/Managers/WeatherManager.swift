@@ -100,7 +100,7 @@ func isDayTime(date: Date, response: WeatherData) -> Int {
 }
 
 func loadCurrentWeather(_ response: WeatherData) -> CurrentWeather {
-    let isDay = isDayTime(date: Date(), response: response)
+    let isDay = response.current.is_day
     let timeZone = response.timezone
     return CurrentWeather(
         dayName: getFormattedTime(from: response.current.time, with: "EEE", for: timeZone),

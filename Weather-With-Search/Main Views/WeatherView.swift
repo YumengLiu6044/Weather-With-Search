@@ -107,18 +107,6 @@ struct WeatherView: View {
     }
     
     private func loadWeather() async {
-        while locationManager.isLoading {}
-        guard let location = locationManager.location else {return}
-        do {
-            response = try await weatherManager.getCurrentWeather(latitude: location.latitude, longitude: location.longitude, unit: "celsius")
-            
-        } catch networkingError.responseError{
-            print("Response Error")
-        } catch networkingError.dataError {
-            print("Data error")
-        } catch {
-            print("Unexpected error")
-        }
         if let response = response{
             currentWeather = loadCurrentWeather(response)
             hourWeatherArray = loadHourWeather(response)

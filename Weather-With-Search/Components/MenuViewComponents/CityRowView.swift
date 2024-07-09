@@ -107,6 +107,6 @@ struct CityRowView: View {
 }
 
 #Preview {
-    CityRowView(city: LocationData(cityTitle: "Pleasanton, CA", citySubtitle: "United States"))
+    CityRowView(city: LocationData(cityTitle: "Madrid", citySubtitle: "Spain"))
     
 }
