@@ -23,6 +23,9 @@ final class SearchResultViewModel: ObservableObject {
             else if result.subtitle == "Search Nearby" {
                 return false
             }
+            else if result.subtitle == "No Results Nearby" {
+                return false
+            }
             else if result.subtitle.filter({char in char.isNumber}).count > 0 {
                 return false
             }
