@@ -64,32 +64,23 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate{
         }
     }
     
-    func forwardGeocoding(address: String) -> CLLocationCoordinate2D {
-        var result: CLLocationCoordinate2D?
+    
+    func getCoordinate( addressString : String,
+                        completionHandler: @escaping(CLLocationCoordinate2D, NSError?) -> Void ) {
         let geocoder = CLGeocoder()
-        geocoder.geocodeAddressString(address, completionHandler: { (placemarks, error) in
-            if error != nil {
-                print("Failed to retrieve location")
-                return
+        geocoder.geocodeAddressString(addressString) { (placemarks, error) in
+            if error == nil {
+                if let placemark = placemarks?[0] {
+                    let location = placemark.location!
+                    
+                    completionHandler(location.coordinate, nil)
+                    return
+                }
             }
             
-            var location: CLLocation?
-            
-            if let placemarks = placemarks, placemarks.count > 0 {
-                location = placemarks.first?.location
-            }
-            
-            if let location = location {
-                let coordinate = location.coordinate
-                print("\nlat: \(coordinate.latitude), long: \(coordinate.longitude)")
-                result = CLLocationCoordinate2D(latitude: coordinate.latitude, longitude: coordinate.longitude)
-            }
-            else
-            {
-                print("No Matching Location Found")
-            }
-        })
-        return result ?? CLLocationCoordinate2D(latitude: 0, longitude: 0)
+            completionHandler(kCLLocationCoordinate2DInvalid, error as NSError?)
+        }
     }
+    
     
 }

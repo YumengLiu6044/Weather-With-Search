@@ -10,7 +10,12 @@ import Foundation
 struct LocationData: Identifiable, Hashable {
     
     let id : UUID = UUID()
-    let cityName: String
-    let cityGeocodeString: String
+    let cityTitle: String
+    let citySubtitle: String
+    
+    func getGeocodeString() -> String {
+        let combined = cityTitle + " " + citySubtitle
+        return combined.replacingOccurrences(of: ",", with: "")
+    }
     
 }

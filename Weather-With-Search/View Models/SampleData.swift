@@ -30,8 +30,8 @@ struct SampleData {
         DayWeatherItem(dayName: "Tuesday", maxTemperature: 32, minTemperature: 13, temperatureUnit: "°C", weatherIconName: "")
     ]
     
-    static let sampleCurrentWeather = CurrentWeather(dayName: "Wednesday", date: "Jul 3", temperature: 36, temperatureUnit: "°C", weatherName: "Sunny", weatherIconName: "https://openweathermap.org/img/wn/01d@2x.png")
+    static let sampleCurrentWeather = CurrentWeather(dayName: "Wednesday", date: "Jul 3", temperature: 36, temperatureUnit: "°C", weatherName: "Sunny", weatherIconName: "")
     
-    static let sampleCitiesString = "Pleasanton#Bellevue#New York#Livermore"
+    static let sampleCitiesString = ""
     
 }

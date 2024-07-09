@@ -7,15 +7,15 @@
 
 import Foundation
 import SwiftUI
+import MapKit
 
 
 struct MenuView: View {
-    var weatherManager = WeatherManager()
     @ObservedObject var locationService = LocationService()
     @StateObject private var locationManager = LocationManager()
     @StateObject private var searchResultViewModel = SearchResultViewModel()
     @AppStorage("saved_city_csv_string") private var savedCityString: String = SampleData.sampleCitiesString
-    @State private var citySet: Set<String> = []
+    @State private var citySet: Set<LocationData> = []
     @State private var isLoadingWeatherView = false
     
     var body: some View {
@@ -23,7 +23,7 @@ struct MenuView: View {
             VStack{
                 List {
                     ForEach(Array(citySet), id:\.self) { city in
-                        CityRowView(weatherManager: weatherManager, city: city)
+                        CityRowView(locationManager: locationManager, city: city)
                             .frame(height:120)
                             .clipShape(.rect(cornerRadius: 6))
                     }
@@ -35,6 +35,8 @@ struct MenuView: View {
             .navigationTitle("Weather")
             .searchable(text: $locationService.queryFragment, isPresented: $searchResultViewModel.isSearch)
             .searchSuggestions {
+                Text("Use Current Location")
+                
                 ForEach(searchResultViewModel.listCities(completions: locationService.searchResults), id:\.self) {
                     result in
                     VStack (alignment: .leading){
@@ -43,7 +45,7 @@ struct MenuView: View {
                             .font(.caption)
                     }
                     .onTapGesture {
-                        addCity(result.title)
+                        addCity(result)
                         locationService.queryFragment = ""
                         searchResultViewModel.isSearch = false
                     }
@@ -60,12 +62,16 @@ struct MenuView: View {
     
     private func loadCity() {
         for city in savedCityString.split(separator: "#") {
-            citySet.insert(String(city))
+            let components = city.split(separator: "@")
+            if components.count == 2{
+                citySet.insert(LocationData(cityTitle: String(components[0]), citySubtitle: String(components[1])))
+            }
+            
         }
     }
     
-    private func addCity(_ newCity: String) {
-        citySet.insert(newCity)
+    private func addCity(_ newCity: MKLocalSearchCompletion) {
+        citySet.insert(LocationData(cityTitle: newCity.title, citySubtitle: newCity.subtitle))
         saveCity()
     }
     
@@ -80,7 +86,7 @@ struct MenuView: View {
     private func saveCity() {
         var save: String = ""
         for i in citySet {
-            save += i + "#"
+            save += i.cityTitle + "@" + i.citySubtitle + "#"
         }
         if !save.isEmpty {
             save.removeLast()
@@ -91,5 +97,5 @@ struct MenuView: View {
 
 #Preview {
     MenuView()
-        .preferredColorScheme(.dark)
+        .preferredColorScheme(.light)
 }
