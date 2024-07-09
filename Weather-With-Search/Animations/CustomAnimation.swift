@@ -21,7 +21,14 @@ extension AnyTransition {
     static var backslide: AnyTransition {
         AnyTransition.asymmetric(
             insertion: .move(edge: .trailing),
-            removal: .move(edge: .leading))}
+            removal: .move(edge: .leading))
+    }
+    
+    static var frontslide: AnyTransition {
+        AnyTransition.asymmetric(
+            insertion: .move(edge: .leading),
+            removal: .move(edge: .trailing))
+    }
     
     static func blurReplace() -> AnyTransition {
         AnyTransition.opacity.combined(with: .opacity)

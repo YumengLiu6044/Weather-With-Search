@@ -11,8 +11,8 @@ import Shimmer
 struct DayWeatherRowView: View {
     var dayWeatherItem: DayWeatherItem = SampleData.sampleDayWeatherArray[0]
     
-    @State private var maxTemperature: Double = 42
-    @State private var minTemperature: Double = 10
+    var maxTemperature: Double
+    var minTemperature: Double
     
     @State private var isLoading = true
     
@@ -41,10 +41,7 @@ struct DayWeatherRowView: View {
         .listRowSeparator(.hidden)
         .listRowBackground(Rectangle().foregroundStyle(.ultraThinMaterial))
         .padding(.horizontal, 10.0)
-        .onAppear {
-            maxTemperature = (dayWeatherItem.temperatureUnit == "°C") ? 42 : 100
-            minTemperature = (dayWeatherItem.temperatureUnit == "°C") ? 11 : 50
-        }
+        
     }
     
 }
@@ -52,10 +49,6 @@ struct DayWeatherRowView: View {
 
 
 #Preview {
-    ZStack {
-        Rectangle()
-            .foregroundStyle(.gray)
-            .ignoresSafeArea()
-        DayWeatherRowView()
-    }
+    DayWeatherRowView(maxTemperature: 40.0, minTemperature: 11.0)
+        .preferredColorScheme(.light)
 }

@@ -14,13 +14,11 @@ struct WeatherView: View {
     
     var weatherManager = WeatherManager()
     
-    var location: CLLocationCoordinate2D?
-    var unitPreference: String
+    var response: WeatherData
+    var cityName: String
     
-    @EnvironmentObject var locationManager: LocationManager
-    
-    @State private var response: WeatherData?
-    @State private var cityName: String     =   ""
+    @State private var maxTemperature: Double = 40.0
+    @State private var minTemperature: Double = 11.0
     
     @State private var hourWeatherArray     =   SampleData.sampleHourWeatherArray
     @State private var dayWeatherArray      =   SampleData.sampleDayWeatherArray
@@ -45,7 +43,7 @@ struct WeatherView: View {
                         .shadow(radius: 10)
                         .transition(.blurReplace())
                         .animation(.easeIn, value: cityName)
-                        
+                    
                     
                     CurrentWeatherView(currentWeather: currentWeather)
                     
@@ -73,7 +71,7 @@ struct WeatherView: View {
                         VStack(spacing: 25) {
                             ForEach(dayWeatherArray) {
                                 day in
-                                DayWeatherRowView(dayWeatherItem: day)
+                                DayWeatherRowView(dayWeatherItem: day, maxTemperature: maxTemperature, minTemperature: minTemperature)
                                     .scrollTransition {
                                         content, phase in
                                         content
@@ -102,30 +100,19 @@ struct WeatherView: View {
             }
         }
         .task {
-            await loadWeather()
+            loadWeather()
         }
     }
     
-    private func loadWeather() async {
-        if let response = response{
-            currentWeather = loadCurrentWeather(response)
-            hourWeatherArray = loadHourWeather(response)
-            dayWeatherArray = loadDailyWeather(response)
-        }
+    private func loadWeather() {
+        maxTemperature = response.daily.temperature_2m_max.max() ?? 40
+        minTemperature = response.daily.temperature_2m_min.min() ?? 11
         
-        if let response = response {
-            isDay = (isDayTime(date: Date(), response: response) == 1)
-        }
+        currentWeather = loadCurrentWeather(response)
+        hourWeatherArray = loadHourWeather(response)
+        dayWeatherArray = loadDailyWeather(response)
         
-        locationManager.lookUpCurrentLocation {
-            placemark in
-            if let placemark = placemark {
-                // Access placemark information like locality (city), administrativeArea (state), etc.
-                if let locality = placemark.locality, let administrativeArea = placemark.administrativeArea {
-                    cityName = "\(locality), \(administrativeArea)"
-                }
-            }
-        }
+        isDay = response.current.is_day == 1
         isLoading = false
         
     }

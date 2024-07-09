@@ -26,6 +26,7 @@ struct MenuView: View {
                         CityRowView(locationManager: locationManager, city: city)
                             .frame(height:120)
                             .clipShape(.rect(cornerRadius: 6))
+                        
                             
                     }
                     .onDelete(perform: removeCity)
