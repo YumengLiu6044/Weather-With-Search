@@ -44,17 +44,13 @@ struct MenuView: View {
                 
                 ForEach(searchResultViewModel.listCities(completions: locationService.searchResults), id:\.self) {
                     result in
-                    VStack (alignment: .leading){
-                        Text(result.title)
-                        Text(result.subtitle)
-                            .font(.caption)
-                    }
-                    .frame(width: .infinity)
+                    SearchRecommendationView(result: result)
                     .onTapGesture {
                         addCity(result)
                         locationService.queryFragment = ""
                         searchResultViewModel.isSearch = false
                     }
+                    
                 }
             }
         }
