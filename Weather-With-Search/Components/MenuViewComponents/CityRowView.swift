@@ -62,6 +62,7 @@ struct CityRowView: View {
             }
             
         }
+        .tint(.white)
     }
     
     private func loadLocation() {
