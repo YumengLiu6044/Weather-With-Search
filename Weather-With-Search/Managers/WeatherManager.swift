@@ -37,31 +37,13 @@ enum networkingError : Error {
     case responseError, dataError
 }
 
-func getWeekdayName(from date: Date) -> String {
+func getFormattedTime(from date: Date, with format: String, for timeZone: String) -> String {
     let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "EEE"
-    let weekdayName = dateFormatter.string(from: date)
-    return weekdayName
-}
-
-func getCurrentShortDateString(from date: Date) -> String {
-    let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "MMM d"
-    let dateString = dateFormatter.string(from: date)
-    return dateString
-}
-
-func getHourinAMPMFormat(from date: Date) -> String {
-    let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "h a"  // 'h' for 12-hour format and 'a' for AM/PM
+    dateFormatter.dateFormat = format
+    dateFormatter.timeZone = TimeZone(identifier: timeZone)
     return dateFormatter.string(from: date)
 }
 
-func getHourAndMinute(from date: Date) -> String {
-    let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "HH:mm:ss"
-    return dateFormatter.string(from: date)
-}
 
 func getWeatherIconName(code: Int, isDay: Int) -> String {
     let timeOfDay = (isDay == 1) ? "day" : "night"
@@ -122,19 +104,21 @@ func isDayTime(date: Date, response: WeatherData) -> Int {
 
 func loadCurrentWeather(_ response: WeatherData) -> CurrentWeather {
     let isDay = isDayTime(date: Date(), response: response)
+    let timeZone = response.timezone
     return CurrentWeather(
-        dayName: getWeekdayName(from: response.current.time),
-        date: getCurrentShortDateString(from: response.current.time),
+        dayName: getFormattedTime(from: response.current.time, with: "EEE", for: timeZone),
+        date: getFormattedTime(from: response.current.time, with: "MMM d", for: timeZone),
         temperature: response.current.temperature_2m,
         temperatureUnit: response.current_units.temperature_2m,
         weatherName: getWeatherName(code: response.current.weather_code, isDay: isDay),
-        weatherIconName: getWeatherIconName(code: response.current.weather_code, isDay: isDay))
+        weatherIconName: getWeatherIconName(code: response.current.weather_code, isDay: isDay), timeZone: response.timezone)
         
 }
 
 func loadHourWeather(_ response: WeatherData) -> [HourWeatherItem] {
     var hourArray: [HourWeatherItem] = []
     let currentTime = Date()
+    let timeZone = response.timezone
     var hourStartIndex = 0
     
     while !isSameDateAndHour(date1: currentTime, date2: response.hourly.time[hourStartIndex]) {
@@ -144,7 +128,7 @@ func loadHourWeather(_ response: WeatherData) -> [HourWeatherItem] {
     
     for i in 0...23 {
         hourArray.append(HourWeatherItem(
-            hour: getHourinAMPMFormat(from: hourlyData.time[i + hourStartIndex]),
+            hour: getFormattedTime(from: hourlyData.time[i + hourStartIndex], with: "h a", for: timeZone),
             weatherIconName: getWeatherIconName(code: hourlyData.weather_code[i + hourStartIndex], isDay: isDayTime(date: hourlyData.time[i + hourStartIndex], response: response)),
             temperature: hourlyData.temperature_2m[i + hourStartIndex],
             temperatureUnit: response.hourly_units.temperature_2m
@@ -157,10 +141,11 @@ func loadHourWeather(_ response: WeatherData) -> [HourWeatherItem] {
 func loadDailyWeather(_ response: WeatherData) -> [DayWeatherItem] {
     var dayArray: [DayWeatherItem] = []
     let dailyData = response.daily
+    let timeZone = response.timezone
     
     for i in 0..<dailyData.time.count {
         dayArray.append(DayWeatherItem(
-            dayName: (i == 0) ? "Today" : getWeekdayName(from: dailyData.time[i]),
+            dayName: (i == 0) ? "Today" : getFormattedTime(from: dailyData.time[i], with: "EEE", for: timeZone),
             maxTemperature: dailyData.temperature_2m_max[i],
             minTemperature: dailyData.temperature_2m_min[i],
             temperatureUnit: response.daily_units.temperature_2m_min,

@@ -26,6 +26,7 @@ struct MenuView: View {
                         CityRowView(locationManager: locationManager, city: city)
                             .frame(height:120)
                             .clipShape(.rect(cornerRadius: 6))
+                            
                     }
                     .onDelete(perform: removeCity)
                 }
@@ -35,7 +36,10 @@ struct MenuView: View {
             .navigationTitle("Weather")
             .searchable(text: $locationService.queryFragment, isPresented: $searchResultViewModel.isSearch)
             .searchSuggestions {
-                Text("Use Current Location")
+                HStack{
+                    Image(systemName: "location")
+                    Text("Use Current Location")
+                }
                 
                 ForEach(searchResultViewModel.listCities(completions: locationService.searchResults), id:\.self) {
                     result in

@@ -77,6 +77,7 @@ struct CurrentWeather {
     let temperatureUnit: String
     let weatherName: String
     let weatherIconName: String
+    let timeZone: String
     
     func presentTemperature() -> String {
         return "\(temperature)°"

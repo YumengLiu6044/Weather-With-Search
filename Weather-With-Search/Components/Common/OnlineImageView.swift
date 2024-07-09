@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Shimmer
 
 
 struct OnlineImageView: View {
@@ -35,6 +36,7 @@ struct OnlineImageView: View {
                     .onAppear {
                         isLoading = true
                     }
+                    
                 
             @unknown default:
                 EmptyView()

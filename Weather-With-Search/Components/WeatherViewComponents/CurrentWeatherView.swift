@@ -42,7 +42,7 @@ struct CurrentWeatherView: View {
                 VStack(alignment: .trailing){
                     Text(currentTime)
                         .onReceive(timer) { _ in
-                            self.currentTime = getHourAndMinute(from: Date())
+                            self.currentTime = getFormattedTime(from: Date(), with: "HH:mm:ss", for: currentWeather.timeZone)
                         }
                     
                     Text(currentWeather.dayName)

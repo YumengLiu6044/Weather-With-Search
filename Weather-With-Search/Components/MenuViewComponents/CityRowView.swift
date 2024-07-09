@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CoreLocation
+import Shimmer
 
 struct CityRowView: View {
     var locationManager: LocationManager = LocationManager()
@@ -16,6 +17,8 @@ struct CityRowView: View {
     @State private var response: WeatherData?
     @State private var currentWeather: CurrentWeather?
     @State private var isDay: Bool = true
+    @State private var timer  = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    @State private var currentTime: String = ""
     
     var body: some View {
         HStack {
@@ -24,6 +27,10 @@ struct CityRowView: View {
                     .font(.title)
                 Text(city.citySubtitle)
                     .font(.body)
+                Text(self.currentTime)
+                    .onReceive(timer) { _ in
+                        self.currentTime = getFormattedTime(from: Date(), with: "HH:mm:ss", for: currentWeather?.timeZone ?? "America/Los_Angeles")
+                    }
             }
             
             Spacer()
@@ -31,16 +38,19 @@ struct CityRowView: View {
                 OnlineImageView(imageURL: currentWeather?.weatherIconName ?? "", isLoading: $isLoading)
                     .frame(width:70, height:70)
                     .padding(.leading, 5)
-                Text(currentWeather?.presentTemperature() ?? "Placeholder")
+                Text(currentWeather?.presentTemperature() ?? "what_the")
                     .font(.title)
                     .redacted(reason: isLoading ? .placeholder : [])
-                
-                
+                    .shimmering(active: isLoading)
             }
-            
         }
+        .transition(.blurReplace())
+        .animation(.easeInOut, value: isLoading)
         .padding()
         .fontWeight(.semibold)
+        .onAppear {
+            self.currentTime = getFormattedTime(from: Date(), with: "HH:mm:ss", for: currentWeather?.timeZone ?? "America/Los_Angeles")
+        }
         .task {
             locationManager.getCoordinate(addressString: city.getGeocodeString()) { (coordinate, error) in
                 if let error = error {
@@ -63,8 +73,9 @@ struct CityRowView: View {
                         } catch {
                             print("Unexpected error")
                         }
-                        
-                        isLoading = false
+                        withAnimation {
+                            isLoading = false
+                        }
                     }
                 }
             }
