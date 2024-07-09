@@ -25,6 +25,8 @@ struct CityRowView: View {
         NavigationLink{
             if !isLoading {
                 WeatherView(weatherManager: self.weatherManager, response: self.response!, cityName: self.city.cityTitle)
+                    .navigationBarTitleDisplayMode(.inline)
+                                            
             }
         } label: {
             HStack {

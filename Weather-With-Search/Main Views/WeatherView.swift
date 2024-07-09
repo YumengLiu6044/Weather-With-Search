@@ -88,7 +88,7 @@ struct WeatherView: View {
                     .clipShape(.rect(cornerRadius: 10))
                     
                 }
-                .padding(20.0)
+                .padding(10.0)
                 .transition(.backslide)
             }
             
