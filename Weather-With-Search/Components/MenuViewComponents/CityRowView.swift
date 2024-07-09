@@ -22,49 +22,40 @@ struct CityRowView: View {
     @State private var currentTime: String = ""
     
     var body: some View {
-        NavigationStack{
-            NavigationLink {
-                if !isLoading{
-                    WeatherView(response: response!, cityName: city.cityTitle)
-                }
-            } label: {
-                HStack {
-                    VStack(alignment: .leading, spacing: 10){
-                        Text(city.cityTitle)
-                            .font(.title)
-                        Text(city.citySubtitle)
-                            .font(.body)
-                        Text(self.currentTime)
-                            .onReceive(timer) { _ in
-                                self.currentTime = getFormattedTime(from: Date(), with: "HH:mm:ss", for: timeZone)
-                            }
+        HStack {
+            VStack(alignment: .leading, spacing: 10){
+                Text(city.cityTitle)
+                    .font(.title)
+                Text(city.citySubtitle)
+                    .font(.body)
+                Text(self.currentTime)
+                    .onReceive(timer) { _ in
+                        self.currentTime = getFormattedTime(from: Date(), with: "HH:mm:ss", for: timeZone)
                     }
-                    
-                    Spacer()
-                    VStack{
-                        OnlineImageView(imageURL: currentWeather?.weatherIconName ?? "", isLoading: .constant(true))
-                            .frame(width:70, height:70)
-                            .padding(.leading, 5)
-                        Text(currentWeather?.presentTemperature() ?? "what_the")
-                            .font(.title)
-                            .redacted(reason: isLoading ? .placeholder : [])
-                            .shimmering(active: isLoading)
-                    }
-                }
-                .transition(.blurReplace())
-                .animation(.easeInOut, value: isLoading)
-                .padding()
-                .fontWeight(.semibold)
-                .onAppear {
-                    self.currentTime = getFormattedTime(from: Date(), with: "HH:mm:ss", for: timeZone)
-                }
-                .task{
-                    loadLocation()
-                }
             }
-            .foregroundStyle(.foreground)
-            .buttonStyle(PlainButtonStyle())
+            
+            Spacer()
+            VStack{
+                OnlineImageView(imageURL: currentWeather?.weatherIconName ?? "", isLoading: .constant(true))
+                    .frame(width:70, height:70)
+                    .padding(.leading, 5)
+                Text(currentWeather?.presentTemperature() ?? "what_the")
+                    .font(.title)
+                    .redacted(reason: isLoading ? .placeholder : [])
+                    .shimmering(active: isLoading)
+            }
         }
+        .transition(.blurReplace())
+        .animation(.easeInOut, value: isLoading)
+        .padding()
+        .fontWeight(.semibold)
+        .onAppear {
+            self.currentTime = getFormattedTime(from: Date(), with: "HH:mm:ss", for: timeZone)
+        }
+        .task{
+            loadLocation()
+        }
+        
     }
     
     private func loadLocation() {
