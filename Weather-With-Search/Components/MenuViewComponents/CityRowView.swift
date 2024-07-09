@@ -19,7 +19,7 @@ struct CityRowView: View {
     @State private var timeZone: String = "America/Los_Angeles"
     @State private var isDay: Bool = true
     @State private var timer  = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    @State private var currentTime: String = ""
+    @State private var currentTime: String = "23:59"
     
     var body: some View {
         NavigationLink{
@@ -28,15 +28,18 @@ struct CityRowView: View {
             }
         } label: {
             HStack {
-                VStack(alignment: .leading, spacing: 10){
+                VStack(alignment: .leading, spacing: 5){
                     Text(city.cityTitle)
                         .font(.title)
                     Text(city.citySubtitle)
-                        .font(.body)
+                        .font(.title2)
                     Text(self.currentTime)
+                        .font(.title2)
                         .onReceive(timer) { _ in
-                            self.currentTime = getFormattedTime(from: Date(), with: "HH:mm:ss", for: timeZone)
+                            self.currentTime = getFormattedTime(from: Date(), with: "HH:mm", for: timeZone)
                         }
+                        .shimmering(active: isLoading)
+                        .redacted(reason: isLoading ? .placeholder : [])
                 }
                 
                 Spacer()
@@ -54,9 +57,6 @@ struct CityRowView: View {
             .animation(.easeInOut, value: isLoading)
             .padding()
             .fontWeight(.semibold)
-            .onAppear {
-                self.currentTime = getFormattedTime(from: Date(), with: "HH:mm", for: timeZone)
-            }
             .task{
                 loadLocation()
             }

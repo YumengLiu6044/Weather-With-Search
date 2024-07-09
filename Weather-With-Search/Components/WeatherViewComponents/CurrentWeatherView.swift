@@ -10,8 +10,12 @@ import SwiftUI
 struct CurrentWeatherView: View {
     var currentWeather: CurrentWeather
     
+    init(currentWeather: CurrentWeather) {
+        self.currentWeather = currentWeather
+        currentTime = getFormattedTime(from: Date(), with: "HH:mm:ss", for: self.currentWeather.timeZone)
+    }
     @State private var isLoading    = true
-    @State private var currentTime  = "23:59:59"
+    @State private var currentTime: String
     @State private var timer        = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     var body: some View {
@@ -42,8 +46,10 @@ struct CurrentWeatherView: View {
                 VStack(alignment: .trailing){
                     Text(currentTime)
                         .onReceive(timer) { _ in
-                            self.currentTime = getFormattedTime(from: Date(), with: "HH:mm:ss", for: currentWeather.timeZone)
+                            updateTime()
                         }
+                        .transition(.blurReplace())
+                        .animation(.easeIn, value: currentTime)
                     
                     Text(currentWeather.dayName)
                     Text(currentWeather.date)
@@ -58,6 +64,10 @@ struct CurrentWeatherView: View {
         .font(.system(size: 40))
         .foregroundStyle(.white)
         .shadow(radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
+    }
+    
+    private func updateTime() {
+        self.currentTime = getFormattedTime(from: Date(), with: "HH:mm:ss", for: currentWeather.timeZone)
     }
 }
 
