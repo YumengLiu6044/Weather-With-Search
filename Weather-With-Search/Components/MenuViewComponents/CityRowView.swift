@@ -43,6 +43,8 @@ struct CityRowView: View {
                         .shimmering(active: isLoading)
                         .redacted(reason: isLoading ? .placeholder : [])
                 }
+                .scaledToFit()
+                .minimumScaleFactor(0.4)
                 
                 Spacer()
                 VStack{
