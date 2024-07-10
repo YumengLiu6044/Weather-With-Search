@@ -51,19 +51,14 @@ struct CityRowView: View {
                     OnlineImageView(imageURL: currentWeather?.weatherIconName ?? "", isLoading: .constant(true))
                         .frame(width:70, height:70)
                         .padding(.leading, 5)
-                    if let currentWeather = currentWeather {
-                        Text(showTemperature(from: currentWeather.temperature, of: currentWeather.temperatureUnit, to: preferredUnit))
+                    Text(showTemperature(from: currentWeather?.temperature ?? 30.0, of: currentWeather?.temperatureUnit ?? "°C", to: preferredUnit))
                             .font(.title)
                             .redacted(reason: isLoading ? .placeholder : [])
                             .shimmering(active: isLoading)
                             .transition(.blurReplace())
                             .animation(.easeIn, value: preferredUnit)
-                    } else {
-                        Text("what_the")
-                            .font(.title)
-                            .redacted(reason: isLoading ? .placeholder : [])
-                            .shimmering(active: isLoading)
-                    }
+                            .animation(.easeIn, value: isLoading)
+                    
                     
                 }
             }
