@@ -13,6 +13,7 @@ struct CityRowView: View {
     var locationManager: LocationManager
     var weatherManager: WeatherManager = WeatherManager()
     var city: LocationData
+    @Binding var preferredUnit: UnitTemperature
     @State private var isLoading: Bool = true
     @State private var response: WeatherData?
     @State private var currentWeather: CurrentWeather?
@@ -24,11 +25,8 @@ struct CityRowView: View {
     var body: some View {
         NavigationLink{
             if !isLoading {
-                WeatherView(weatherManager: self.weatherManager, response: self.response!, cityName: self.city.cityTitle)
+                WeatherView(weatherManager: self.weatherManager, response: self.response!, cityName: self.city.cityTitle, preferredUnit: $preferredUnit)
                     .navigationBarTitleDisplayMode(.inline)
-                    
-                    
-                                            
             }
         } label: {
             HStack {
@@ -51,10 +49,18 @@ struct CityRowView: View {
                     OnlineImageView(imageURL: currentWeather?.weatherIconName ?? "", isLoading: .constant(true))
                         .frame(width:70, height:70)
                         .padding(.leading, 5)
-                    Text(currentWeather?.presentTemperature() ?? "what_the")
-                        .font(.title)
-                        .redacted(reason: isLoading ? .placeholder : [])
-                        .shimmering(active: isLoading)
+                    if let currentWeather = currentWeather {
+                        Text(showTemperature(from: currentWeather.temperature, of: currentWeather.temperatureUnit, to: preferredUnit))
+                            .font(.title)
+                            .redacted(reason: isLoading ? .placeholder : [])
+                            .shimmering(active: isLoading)
+                    } else {
+                        Text("what_the")
+                            .font(.title)
+                            .redacted(reason: isLoading ? .placeholder : [])
+                            .shimmering(active: isLoading)
+                    }
+                    
                 }
             }
             .transition(.blurReplace())
@@ -66,6 +72,7 @@ struct CityRowView: View {
             }
             
         }
+        .tint(.white)
     }
     
     private func loadLocation() {
@@ -99,7 +106,7 @@ struct CityRowView: View {
     
     private func loadWeather(location: CLLocationCoordinate2D) async {
         do {
-            response = try await weatherManager.getCurrentWeather(latitude: location.latitude, longitude: location.longitude, unit: "celsius", timeZone: timeZone)
+            response = try await weatherManager.getCurrentWeather(latitude: location.latitude, longitude: location.longitude, unit: preferredUnit == UnitTemperature.celsius ? "celsius" : "fahrenheit", timeZone: timeZone)
             
             if let response = response {
                 currentWeather = loadCurrentWeather(response)
@@ -118,6 +125,6 @@ struct CityRowView: View {
 }
 
 #Preview {
-    CityRowView(locationManager: LocationManager(), city: LocationData(cityTitle: "Beijing", citySubtitle: "China"))
+    CityRowView(locationManager: LocationManager(), city: LocationData(cityTitle: "Beijing", citySubtitle: "China"), preferredUnit: .constant(.celsius))
     
 }

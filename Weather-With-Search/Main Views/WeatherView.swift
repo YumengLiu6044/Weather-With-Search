@@ -16,6 +16,7 @@ struct WeatherView: View {
     
     var response: WeatherData
     var cityName: String
+    @Binding var preferredUnit: UnitTemperature
     
     @State private var maxTemperature: Double = 40.0
     @State private var minTemperature: Double = 11.0
@@ -46,12 +47,12 @@ struct WeatherView: View {
                         .animation(.easeIn, value: cityName)
                     
                     
-                    CurrentWeatherView(currentWeather: currentWeather)
+                    CurrentWeatherView(currentWeather: currentWeather, preferredUnit: $preferredUnit)
                     
                     ScrollView(.horizontal) {
                         HStack(spacing: 5){
                             ForEach(hourWeatherArray) { day in
-                                HourRowItemView(hourWeatherItem: day)
+                                HourRowItemView(preferredUnit: $preferredUnit, hourWeatherItem: day)
                                     .scrollTransition {
                                         content, phase in
                                         content
@@ -72,7 +73,7 @@ struct WeatherView: View {
                         VStack(spacing: 10) {
                             ForEach(dayWeatherArray) {
                                 day in
-                                DayWeatherRowView(dayWeatherItem: day, maxTemperature: maxTemperature, minTemperature: minTemperature)
+                                DayWeatherRowView(dayWeatherItem: day, maxTemperature: maxTemperature, minTemperature: minTemperature, preferredUnit: $preferredUnit)
                                     .scrollTransition {
                                         content, phase in
                                         content

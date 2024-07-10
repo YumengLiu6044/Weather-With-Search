@@ -12,6 +12,7 @@ struct Weather_With_SearchApp: App {
     var body: some Scene {
         WindowGroup {
             MenuView()
+                .preferredColorScheme(/*@START_MENU_TOKEN@*/.dark/*@END_MENU_TOKEN@*/)
         }
     }
 }

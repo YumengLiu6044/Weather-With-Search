@@ -11,6 +11,7 @@ import Shimmer
 struct HourRowItemView: View {
     
     @State private var isLoading = true
+    @Binding var preferredUnit: UnitTemperature
     var hourWeatherItem: HourWeatherItem = SampleData.sampleHourWeatherArray[0]
     
     var body: some View {
@@ -21,7 +22,7 @@ struct HourRowItemView: View {
             OnlineImageView(imageURL: hourWeatherItem.weatherIconName, isLoading: $isLoading)
                 .frame(width:50)
                 
-            Text(hourWeatherItem.presentTemperature())
+            Text(showTemperature(from: hourWeatherItem.temperature, of: hourWeatherItem.temperatureUnit, to: preferredUnit))
                 .shimmering(active: isLoading)
             
         }
@@ -37,6 +38,6 @@ struct HourRowItemView: View {
 }
 
 #Preview {
-    HourRowItemView()
+    HourRowItemView(preferredUnit: .constant(.celsius))
         .preferredColorScheme(.dark)
 }

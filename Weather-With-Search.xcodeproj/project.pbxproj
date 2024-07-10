@@ -11,6 +11,7 @@
 		E21ED7772C3B934A001A2E16 /* WeatherModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E21ED7762C3B934A001A2E16 /* WeatherModel.swift */; };
 		E21ED7792C3B9352001A2E16 /* SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E21ED7782C3B9352001A2E16 /* SampleData.swift */; };
 		E21ED77D2C3B9915001A2E16 /* LocationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E21ED77C2C3B9915001A2E16 /* LocationModel.swift */; };
+		E24948C82C3E580D00F57F97 /* Shimmer in Frameworks */ = {isa = PBXBuildFile; productRef = E24948C72C3E580D00F57F97 /* Shimmer */; };
 		E27942522C3D0F780028DCE5 /* SearchRecommendationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27942512C3D0F780028DCE5 /* SearchRecommendationView.swift */; };
 		E28C7EC82C3C87E1000C0AFC /* LocationSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28C7EC72C3C87E1000C0AFC /* LocationSearch.swift */; };
 		E28C7ECB2C3C89BC000C0AFC /* CityRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28C7ECA2C3C89BC000C0AFC /* CityRowView.swift */; };
@@ -24,7 +25,6 @@
 		E2AE44A02C3B8B6B00CB4258 /* GaugeRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2AE449F2C3B8B6B00CB4258 /* GaugeRowView.swift */; };
 		E2AE44A32C3B8B9800CB4258 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2AE44A22C3B8B9800CB4258 /* MenuView.swift */; };
 		E2AE44A52C3B8BA200CB4258 /* WeatherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2AE44A42C3B8BA200CB4258 /* WeatherView.swift */; };
-		E2AE44A82C3B8BC800CB4258 /* Shimmer in Frameworks */ = {isa = PBXBuildFile; productRef = E2AE44A72C3B8BC800CB4258 /* Shimmer */; };
 		E2AE44AE2C3B8C6900CB4258 /* WeatherManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2AE44AD2C3B8C6900CB4258 /* WeatherManager.swift */; };
 		E2AE44B02C3B8C7700CB4258 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2AE44AF2C3B8C7700CB4258 /* LocationManager.swift */; };
 		E2AE44B32C3B8C9B00CB4258 /* HourRowItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2AE44B22C3B8C9B00CB4258 /* HourRowItemView.swift */; };
@@ -65,7 +65,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E2AE44A82C3B8BC800CB4258 /* Shimmer in Frameworks */,
+				E24948C82C3E580D00F57F97 /* Shimmer in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -215,7 +215,7 @@
 			);
 			name = "Weather-With-Search";
 			packageProductDependencies = (
-				E2AE44A72C3B8BC800CB4258 /* Shimmer */,
+				E24948C72C3E580D00F57F97 /* Shimmer */,
 			);
 			productName = "Weather-With-Search";
 			productReference = E2AE447F2C3B89D900CB4258 /* Weather.app */;
@@ -519,7 +519,7 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		E2AE44A72C3B8BC800CB4258 /* Shimmer */ = {
+		E24948C72C3E580D00F57F97 /* Shimmer */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E2AE44A62C3B8BC800CB4258 /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */;
 			productName = Shimmer;

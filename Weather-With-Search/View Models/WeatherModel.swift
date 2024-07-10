@@ -84,9 +84,6 @@ struct CurrentWeather {
     let weatherIconName: String
     let timeZone: String
     
-    func presentTemperature() -> String {
-        return "\(temperature)°"
-    }
 }
 
 struct HourWeatherItem : Identifiable {
@@ -95,10 +92,6 @@ struct HourWeatherItem : Identifiable {
     let weatherIconName: String
     let temperature: Float
     let temperatureUnit: String
-    
-    func presentTemperature() -> String {
-        return "\(temperature)°"
-    }
     
 }
 
@@ -109,5 +102,4 @@ struct DayWeatherItem: Identifiable {
     let minTemperature: Double
     let temperatureUnit: String
     let weatherIconName: String
-    
 }

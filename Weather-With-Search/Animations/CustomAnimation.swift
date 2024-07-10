@@ -12,7 +12,7 @@ struct AnimatedLinearGradient: View {
     @Binding var isDay: Bool
 
     var body: some View {
-        LinearGradient(colors: [isDay ? .blue : .black, isDay ? .blue.opacity(0.5) : .black.opacity(0.5)], startPoint: .top, endPoint: .bottom)
+        LinearGradient(colors: [isDay ? .blue : .black, isDay ? Color(red: 0.474, green: 0.745, blue: 0.878) : .gray.opacity(0.5)], startPoint: .top, endPoint: .bottom)
             .animation(.easeInOut(duration: 1), value: isDay)
     }
 }

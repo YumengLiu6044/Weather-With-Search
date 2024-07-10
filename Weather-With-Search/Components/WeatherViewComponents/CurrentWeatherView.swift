@@ -10,10 +10,12 @@ import SwiftUI
 struct CurrentWeatherView: View {
     var currentWeather: CurrentWeather
     
-    init(currentWeather: CurrentWeather) {
+    init(currentWeather: CurrentWeather, preferredUnit: Binding<UnitTemperature>) {
         self.currentWeather = currentWeather
         currentTime = getFormattedTime(from: Date(), with: "HH:mm:ss", for: self.currentWeather.timeZone)
+        self._preferredUnit = preferredUnit
     }
+    @Binding var preferredUnit: UnitTemperature
     @State private var isLoading    = true
     @State private var currentTime: String
     @State private var timer        = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
@@ -28,7 +30,7 @@ struct CurrentWeatherView: View {
                     
                     HStack {
                         Text(currentWeather.weatherName)
-                        Text(currentWeather.presentTemperature())
+                        Text(showTemperature(from: currentWeather.temperature, of: currentWeather.temperatureUnit, to: preferredUnit))
                     }
                     .shimmering(active: isLoading)
                     .font(.title2)
@@ -76,5 +78,5 @@ struct CurrentWeatherView: View {
 
 
 #Preview {
-    CurrentWeatherView(currentWeather: SampleData.sampleCurrentWeather)
+    CurrentWeatherView(currentWeather: SampleData.sampleCurrentWeather, preferredUnit: .constant(.celsius))
 }

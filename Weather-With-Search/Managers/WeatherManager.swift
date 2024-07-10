@@ -151,3 +151,14 @@ func loadDailyWeather(_ response: WeatherData) -> [DayWeatherItem] {
     }
     return dayArray
 }
+
+func showTemperature(from value: Float, of currentUnit: String, to preferredUnit: UnitTemperature) -> String {
+    return String(convertTemperature(from: value, of: currentUnit, to: preferredUnit)) + "°"
+}
+
+func convertTemperature(from value: Float, of currentUnit: String, to preferredUnit: UnitTemperature) -> Double {
+    let temperature = Measurement(value: Double(value), unit: currentUnit == "°C" ? UnitTemperature.celsius : UnitTemperature.fahrenheit)
+    var rawValue = temperature.converted(to: preferredUnit).value
+    rawValue = ceil(rawValue * 10) / 10.0
+    return rawValue
+}

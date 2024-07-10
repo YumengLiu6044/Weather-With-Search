@@ -14,6 +14,7 @@ struct DayWeatherRowView: View {
     var maxTemperature: Double
     var minTemperature: Double
     
+    @Binding var preferredUnit: UnitTemperature
     @State private var isLoading = true
     
     var body: some View {
@@ -28,7 +29,11 @@ struct DayWeatherRowView: View {
             
             Spacer()
             
-            GaugeRow(gaugeData: GaugeData(minimunValue: self.minTemperature, maximimValue: self.maxTemperature, minimunTrackValue: dayWeatherItem.minTemperature, maximimTrackValue: dayWeatherItem.maxTemperature))
+            GaugeRow(gaugeData: GaugeData(
+                minimunValue: convertTemperature(from: Float(self.minTemperature), of: dayWeatherItem.temperatureUnit, to: preferredUnit),
+                maximimValue: convertTemperature(from: Float(self.maxTemperature), of: dayWeatherItem.temperatureUnit, to: preferredUnit),
+                minimunTrackValue: convertTemperature(from: Float(dayWeatherItem.minTemperature), of: dayWeatherItem.temperatureUnit, to: preferredUnit),
+                maximimTrackValue: convertTemperature(from: Float(dayWeatherItem.maxTemperature), of: dayWeatherItem.temperatureUnit, to: preferredUnit)))
                 .frame(width: 200, height: 10)
                 .shimmering(active: isLoading)
                 
@@ -49,6 +54,6 @@ struct DayWeatherRowView: View {
 
 
 #Preview {
-    DayWeatherRowView(maxTemperature: 40.0, minTemperature: 11.0)
+    DayWeatherRowView(maxTemperature: 40.0, minTemperature: 11.0, preferredUnit: .constant(.celsius))
         .preferredColorScheme(.light)
 }
