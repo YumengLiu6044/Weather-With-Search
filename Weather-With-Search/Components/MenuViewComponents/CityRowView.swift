@@ -54,6 +54,8 @@ struct CityRowView: View {
                             .font(.title)
                             .redacted(reason: isLoading ? .placeholder : [])
                             .shimmering(active: isLoading)
+                            .transition(.blurReplace())
+                            .animation(.easeIn, value: preferredUnit)
                     } else {
                         Text("what_the")
                             .font(.title)

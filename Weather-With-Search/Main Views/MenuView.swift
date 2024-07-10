@@ -17,14 +17,12 @@ struct MenuView: View {
     @AppStorage("saved_city_csv_string") private var savedCityString: String = SampleData.sampleCitiesString
     @State private var cityArray: Array<LocationData> = []
     @State private var isLoadingWeatherView = false
-    @State private var preferredUnit = UnitTemperature.fahrenheit
+    @State private var preferredUnit: UnitTemperature = .fahrenheit
     
+    let unitOptions = [UnitTemperature.celsius, UnitTemperature.fahrenheit]
     var body: some View {
         NavigationStack{
             VStack{
-                Button("Change") {
-                    preferredUnit = preferredUnit == UnitTemperature.celsius ? .fahrenheit : .celsius
-                }
                 List {
                     ForEach(cityArray, id:\.self) { city in
                         CityRowView(locationManager: self.locationManager, city: city, preferredUnit: $preferredUnit)
@@ -43,7 +41,17 @@ struct MenuView: View {
                 .listRowSpacing(15)
                 
             }
-            
+            .toolbar {
+                Picker(selection: $preferredUnit, label: Text("Picker")) {
+                    ForEach(unitOptions, id: \.self) { unit in
+                        Text(unit.symbol)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .padding()
+                
+                
+            }
             .navigationTitle("Weather")
             .searchable(text: $locationService.queryFragment, isPresented: $searchResultViewModel.isSearch)
             .searchSuggestions {
@@ -73,7 +81,6 @@ struct MenuView: View {
             loadCity()
             locationManager.requestLocation()
         }
-        
         
     }
     
@@ -135,6 +142,8 @@ struct MenuView: View {
         }
     }
 }
+
+
 
 #Preview {
     MenuView()
