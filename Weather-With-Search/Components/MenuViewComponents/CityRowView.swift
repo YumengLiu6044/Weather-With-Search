@@ -40,26 +40,22 @@ struct CityRowView: View {
                         .onReceive(timer) { _ in
                             self.currentTime = getFormattedTime(from: Date(), with: "HH:mm", for: timeZone)
                         }
-                        .shimmering(active: isLoading)
                         .redacted(reason: isLoading ? .placeholder : [])
                 }
                 .scaledToFit()
                 .minimumScaleFactor(0.4)
                 
                 Spacer()
-                VStack{
+                VStack(alignment: .center){
                     OnlineImageView(imageURL: currentWeather?.weatherIconName ?? "", isLoading: .constant(true))
                         .frame(width:70, height:70)
                         .padding(.leading, 5)
                     Text(showTemperature(from: currentWeather?.temperature ?? 30.0, of: currentWeather?.temperatureUnit ?? "°C", to: preferredUnit))
                             .font(.title)
                             .redacted(reason: isLoading ? .placeholder : [])
-                            .shimmering(active: isLoading)
-                            .transition(.blurReplace())
                             .animation(.easeIn, value: preferredUnit)
-                            .animation(.easeIn, value: isLoading)
-                    
-                    
+                        
+                             
                 }
             }
             .transition(.blurReplace())
